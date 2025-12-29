@@ -78,51 +78,57 @@ extension NewTypeProtocol where Self: ExpressibleByBooleanLiteral, RawValue: Exp
 
 #if false
 // Impossible as of Swift 6.2; see ExpressibleByArrayLiteral.
-extension NewTypeProtocol where Self: ExpressibleByDictionaryLiteral, RawValue:  ExpressibleByDictionaryLiteral {
+extension NewTypeProtocol where Self: ExpressibleByDictionaryLiteral, RawValue: ExpressibleByDictionaryLiteral {
 }
 #endif
 
-extension NewTypeProtocol where Self: ExpressibleByExtendedGraphemeClusterLiteral, RawValue:  ExpressibleByExtendedGraphemeClusterLiteral {
+#if false
+// Conflicts with the default init provided by the standard library where Self: ExpressibleByStringLiteral, StringLiteralType == ExtendedGraphemeClusterLiteralType.
+extension NewTypeProtocol where Self: ExpressibleByExtendedGraphemeClusterLiteral, RawValue: ExpressibleByExtendedGraphemeClusterLiteral {
   public init(extendedGraphemeClusterLiteral value: RawValue.ExtendedGraphemeClusterLiteralType) {
     self.init(.init(extendedGraphemeClusterLiteral: value))
   }
 }
+#endif
 
-extension NewTypeProtocol where Self: ExpressibleByFloatLiteral, RawValue:  ExpressibleByFloatLiteral {
+extension NewTypeProtocol where Self: ExpressibleByFloatLiteral, RawValue: ExpressibleByFloatLiteral {
   public init(floatLiteral value: RawValue.FloatLiteralType) {
     self.init(.init(floatLiteral: value))
   }
 }
 
-extension NewTypeProtocol where Self: ExpressibleByIntegerLiteral, RawValue:  ExpressibleByIntegerLiteral {
+extension NewTypeProtocol where Self: ExpressibleByIntegerLiteral, RawValue: ExpressibleByIntegerLiteral {
   public init(integerLiteral value: RawValue.IntegerLiteralType) {
     self.init(.init(integerLiteral: value))
   }
 }
 
-extension NewTypeProtocol where Self: ExpressibleByNilLiteral, RawValue:  ExpressibleByNilLiteral {
+extension NewTypeProtocol where Self: ExpressibleByNilLiteral, RawValue: ExpressibleByNilLiteral {
   public init(nilLiteral: ()) {
     self.init(.init(nilLiteral: ()))
   }
 }
 
-extension NewTypeProtocol where Self: ExpressibleByStringInterpolation, RawValue:  ExpressibleByStringInterpolation {
+extension NewTypeProtocol where Self: ExpressibleByStringInterpolation, RawValue: ExpressibleByStringInterpolation {
   public init(stringInterpolation value: RawValue.StringInterpolation) {
     self.init(.init(stringInterpolation: value))
   }
 }
 
-extension NewTypeProtocol where Self: ExpressibleByStringLiteral, RawValue:  ExpressibleByStringLiteral {
+extension NewTypeProtocol where Self: ExpressibleByStringLiteral, RawValue: ExpressibleByStringLiteral {
   public init(stringLiteral value: RawValue.StringLiteralType) {
     self.init(.init(stringLiteral: value))
   }
 }
 
-extension NewTypeProtocol where Self: ExpressibleByUnicodeScalarLiteral, RawValue:  ExpressibleByUnicodeScalarLiteral {
+#if false
+// Conflicts with the default init provided by the standard library where Self: ExpressibleByExtendedGraphemeClusterLiteral, ExtendedGraphemeClusterLiteralType == UnicodeScalarLiteralType.
+extension NewTypeProtocol where Self: ExpressibleByUnicodeScalarLiteral, RawValue: ExpressibleByUnicodeScalarLiteral {
   public init(unicodeScalarLiteral value: RawValue.UnicodeScalarLiteralType) {
     self.init(.init(unicodeScalarLiteral: value))
   }
 }
+#endif
 
 extension NewTypeProtocol where Self: Hashable, RawValue: Hashable {
   public func hash(into hasher: inout Hasher) {
