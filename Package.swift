@@ -27,6 +27,14 @@ let package = Package(
     .package(url: "https://github.com/swiftlang/swift-syntax.git", from: "602.0.0-latest"),
   ],
   targets: [
+    .target(
+      name: "NewType",
+      dependencies: ["NewTypeCompilerPlugin"],
+    ),
+    .executableTarget(
+      name: "NewTypeClient",
+      dependencies: ["NewType"],
+    ),
     .macro(
       name: "NewTypeCompilerPlugin",
       dependencies: [
@@ -37,17 +45,10 @@ let package = Package(
     .testTarget(
       name: "NewTypeCompilerPluginTests",
       dependencies: [
-        .target(name: "NewTypeCompilerPlugin"),
         .product(name: "MacroTesting", package: "swift-macro-testing"),
+        .product(name: "SwiftCompilerPlugin", package: "swift-syntax"),
+        .target(name: "NewTypeCompilerPlugin"),
       ],
-    ),
-    .target(
-      name: "NewType",
-      dependencies: ["NewTypeCompilerPlugin"],
-    ),
-    .executableTarget(
-      name: "NewTypeClient",
-      dependencies: ["NewType"],
     ),
   ],
 )
