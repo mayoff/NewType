@@ -3,7 +3,7 @@ import NewTypeCompilerPlugin
 import Testing
 
 @Suite(.macros(
-  [NewTypeMacro.self],
+  NewTypeCompilerPlugin().providingMacros,
   indentationWidth: .spaces(2),
   record: nil
 ))

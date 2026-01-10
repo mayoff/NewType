@@ -2,8 +2,10 @@ import SwiftCompilerPlugin
 import SwiftSyntaxMacros
 
 @main
-struct NewTypeCompilerPlugin: CompilerPlugin {
-    let providingMacros: [Macro.Type] = [
-        NewTypeMacro.self,
-    ]
+public struct NewTypeCompilerPlugin: CompilerPlugin {
+  public let providingMacros: [any Macro.Type] = [
+    NewTypeMacro.self,
+  ]
+
+  public init() { }
 }
