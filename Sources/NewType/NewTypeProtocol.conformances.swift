@@ -153,6 +153,60 @@ extension NewTypeProtocol where Self: RawRepresentable {
   }
 }
 
+extension NewTypeProtocol where Self: SetAlgebra, RawValue: SetAlgebra {
+  public init() { self.init(RawValue()) }
+
+  public func union(_ other: Self) -> Self { .init(rawValue.union(other.rawValue)) }
+
+  public func intersection(_ other: Self) -> Self { .init(rawValue.intersection(other.rawValue)) }
+
+  public func symmetricDifference(_ other: Self) -> Self { .init(rawValue.symmetricDifference(other.rawValue)) }
+
+  public mutating func formUnion(_ other: Self) { rawValue.formUnion(other.rawValue) }
+
+  public mutating func formIntersection(_ other: Self) { rawValue.formIntersection(other.rawValue) }
+
+  public mutating func formSymmetricDifference(_ other: Self) { rawValue.formSymmetricDifference(other.rawValue) }
+
+  public func subtracting(_ other: Self) -> Self { .init(rawValue.subtracting(other.rawValue)) }
+
+  public func isSubset(of other: Self) -> Bool { rawValue.isSubset(of: other.rawValue) }
+
+  public func isDisjoint(with other: Self) -> Bool { rawValue.isDisjoint(with: other.rawValue) }
+
+  public func isSuperset(of other: Self) -> Bool { rawValue.isSuperset(of: other.rawValue) }
+
+  public var isEmpty: Bool { rawValue.isEmpty }
+
+  public mutating func subtract(_ other: Self) { rawValue.subtract(other.rawValue) }
+}
+
+extension NewTypeProtocol where Self: SetAlgebra, RawValue: SetAlgebra, Element == RawValue.Element {
+  public func contains(_ member: Element) -> Bool { rawValue.contains(member) }
+
+  @discardableResult
+  public mutating func insert(_ new: Element) -> (inserted: Bool, memberAfterInsert: Element) {
+    return rawValue.insert(new)
+  }
+
+  @discardableResult
+  public mutating func remove(_ member: Element) -> Element? { rawValue.remove(member) }
+
+  @discardableResult
+  public mutating func update(with new: Element) -> Element? { rawValue.update(with: new) }
+
+  public init<S>(_ sequence: S) where S: Sequence, Self.Element == S.Element {
+    self.init(RawValue(sequence))
+  }
+}
+
+extension NewTypeProtocol where Self: SetAlgebra, RawValue: SetAlgebra, Element == RawValue.Element, Element == ArrayLiteralElement {
+  public init(arrayLiteral: Element...) {
+    // Swift 6.2 doesn't provide a way to forward a variadic argument list so I delegate to the generic Sequence init instead.
+    self.init(arrayLiteral)
+  }
+}
+
 extension NewTypeProtocol where Self: Strideable, RawValue: Strideable, RawValue.Stride == RawValue {
   public func distance(to other: Self) -> Self {
     Self.init(rawValue.distance(to: other.rawValue))
