@@ -207,12 +207,19 @@ extension NewTypeProtocol where Self: SetAlgebra, RawValue: SetAlgebra, Element 
   }
 }
 
-extension NewTypeProtocol where Self: Strideable, RawValue: Strideable, RawValue.Stride == RawValue {
-  public func distance(to other: Self) -> Self {
-    Self.init(rawValue.distance(to: other.rawValue))
+extension NewTypeProtocol where Self: Strideable, RawValue: Strideable, Stride == RawValue.Stride {
+  public func distance(to other: Self) -> RawValue.Stride {
+    rawValue.distance(to: other.rawValue)
   }
 
-  public func advanced(by n: Self) -> Self {
-    Self.init(rawValue.advanced(by: n.rawValue))
+  public func advanced(by n: RawValue.Stride) -> Self {
+    Self.init(rawValue.advanced(by: n))
+  }
+}
+
+/// This definition eliminates a conflict between the `<` defined for `Comparable` above and the default `<` the standard library provides for `Strideable`.
+extension NewTypeProtocol where Self: Strideable, RawValue: Comparable {
+  public static func < (lhs: Self, rhs: Self) -> Bool {
+    return lhs.rawValue < rhs.rawValue
   }
 }
