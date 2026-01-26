@@ -134,6 +134,8 @@ extension NewTypeProtocol where Self: Hashable, RawValue: Hashable {
   public func hash(into hasher: inout Hasher) {
     rawValue.hash(into: &hasher)
   }
+
+  public var hashValue: Int { rawValue.hashValue }
 }
 
 extension NewTypeProtocol where Self: Identifiable, RawValue: Identifiable {
