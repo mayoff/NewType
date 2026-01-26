@@ -56,11 +56,23 @@ extension NewTypeMacro: MemberMacro {
       .first { $0.name.tokenKind == .keyword(.public) }?
       .trimmed
 
-    return [
+    var answer: [DeclSyntax] = [
       DeclSyntax("\(accessModifier) typealias RawValue = \(rawType)"),
-      DeclSyntax("\(accessModifier) var rawValue: RawValue"),
-      DeclSyntax("\(accessModifier) init(_ rawValue: RawValue) { self.rawValue = rawValue }"),
     ]
+
+    if !structDecl.containsRawValueProperty() {
+      answer += [
+        DeclSyntax("\(accessModifier) var rawValue: RawValue"),
+      ]
+    }
+
+    if !structDecl.containsInitializer() {
+      answer += [
+        DeclSyntax("\(accessModifier) init(_ rawValue: RawValue) { self.rawValue = rawValue }")
+      ]
+    }
+
+    return answer
   }
 }
 
@@ -72,4 +84,33 @@ struct NewTypeDiagnostic: DiagnosticMessage {
   var message: String
   var diagnosticID: MessageID
   var severity: DiagnosticSeverity
+}
+
+extension StructDeclSyntax {
+  func containsInitializer() -> Bool {
+    return memberBlock
+      .members
+      .contains {
+        $0.decl.is(InitializerDeclSyntax.self)
+      }
+  }
+
+  func containsRawValueProperty() -> Bool {
+    return memberBlock
+      .members
+      .contains {
+        $0.decl.as(VariableDeclSyntax.self)?
+          .containsRawValueBinding()
+        ?? false
+      }
+  }
+}
+
+extension VariableDeclSyntax {
+  func containsRawValueBinding() -> Bool {
+    return bindings
+      .contains {
+        $0.pattern.as(IdentifierPatternSyntax.self)?.identifier.text == "rawValue"
+      }
+  }
 }

@@ -83,4 +83,56 @@ struct NewTypeMacroTests {
       """
     }
   }
+
+  @Test func `user-specified init suppresses generated init`() {
+    assertMacro {
+      """
+      @NewType<Int> public struct MyInt {
+        init(blerg: RawValue) {
+          self.rawValue = blerg
+        }
+      }
+      """
+    } expansion: {
+      """
+      public struct MyInt {
+        init(blerg: RawValue) {
+          self.rawValue = blerg
+        }
+
+        public typealias RawValue = Int
+
+        public var rawValue: RawValue
+      }
+
+      extension MyInt: NewTypeProtocol {
+      }
+      """
+    }
+  }
+
+  @Test func `user-specified rawValue suppresses generated rawValue`() {
+    assertMacro {
+      """
+      @NewType<Int> public struct MyInt {
+        let rawValue: RawValue
+      }
+      """
+    } expansion: {
+      """
+      public struct MyInt {
+        let rawValue: RawValue
+
+        public typealias RawValue = Int
+
+        public init(_ rawValue: RawValue) {
+          self.rawValue = rawValue
+        }
+      }
+
+      extension MyInt: NewTypeProtocol {
+      }
+      """
+    }
+  }
 }
